@@ -205,6 +205,7 @@
             txtGroupCols.Name = "txtGroupCols";
             txtGroupCols.Size = new Size(268, 23);
             txtGroupCols.TabIndex = 10;
+            txtGroupCols.Text = "A,B";
             txtGroupCols.Leave += txtGroupCols_Leave;
             // 
             // lblHeaderRowsLabel
