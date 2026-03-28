@@ -34,157 +34,227 @@
         private System.Windows.Forms.NumericUpDown numMaxRows;
         private System.Windows.Forms.NumericUpDown numHeaderRows;
         private System.Windows.Forms.Label lblMaxRows;
-        private System.Windows.Forms.Label lblHeaderRows;
+        private System.Windows.Forms.Label lblHeaderRowsLabel;
+        private System.Windows.Forms.Label lblOutputDirLabel;
+        private System.Windows.Forms.TextBox txtOutputDir;
+        private System.Windows.Forms.Label lblGroupCols;
+        private System.Windows.Forms.TextBox txtGroupCols;
+        private System.Windows.Forms.CheckBox chkSplitToFiles;
+        private System.Windows.Forms.ContextMenuStrip ctxListCopy;
+        private System.Windows.Forms.ToolStripMenuItem menuCopy;
+        private System.Windows.Forms.ToolStripMenuItem menuCopyAll;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
 
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            this.btnSelectFiles = new System.Windows.Forms.Button();
-            this.btnSelectOutput = new System.Windows.Forms.Button();
-            this.btnStart = new System.Windows.Forms.Button();
-            this.lstFiles = new System.Windows.Forms.ListBox();
-            this.lstLog = new System.Windows.Forms.ListBox();
-            this.numMaxRows = new System.Windows.Forms.NumericUpDown();
-            this.numHeaderRows = new System.Windows.Forms.NumericUpDown();
-            this.lblMaxRows = new System.Windows.Forms.Label();
-            this.lblHeaderRows = new System.Windows.Forms.Label();
-            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            ((System.ComponentModel.ISupportInitialize)(this.numMaxRows)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numHeaderRows)).BeginInit();
-            this.SuspendLayout();
+            btnSelectFiles = new Button();
+            btnSelectOutput = new Button();
+            btnStart = new Button();
+            lstFiles = new ListBox();
+            ctxListCopy = new ContextMenuStrip(components);
+            menuCopy = new ToolStripMenuItem();
+            menuCopyAll = new ToolStripMenuItem();
+            lstLog = new ListBox();
+            numMaxRows = new NumericUpDown();
+            numHeaderRows = new NumericUpDown();
+            lblMaxRows = new Label();
+            lblOutputDirLabel = new Label();
+            txtOutputDir = new TextBox();
+            lblGroupCols = new Label();
+            txtGroupCols = new TextBox();
+            lblHeaderRowsLabel = new Label();
+            folderBrowserDialog = new FolderBrowserDialog();
+            openFileDialog = new OpenFileDialog();
+            chkSplitToFiles = new CheckBox();
+            ctxListCopy.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numMaxRows).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numHeaderRows).BeginInit();
+            SuspendLayout();
             // 
             // btnSelectFiles
             // 
-            this.btnSelectFiles.Location = new System.Drawing.Point(12, 12);
-            this.btnSelectFiles.Name = "btnSelectFiles";
-            this.btnSelectFiles.Size = new System.Drawing.Size(150, 27);
-            this.btnSelectFiles.TabIndex = 0;
-            this.btnSelectFiles.Text = "选择 Excel 文件...";
-            this.btnSelectFiles.UseVisualStyleBackColor = true;
-            this.btnSelectFiles.Click += new System.EventHandler(this.btnSelectFiles_Click);
+            btnSelectFiles.Location = new Point(12, 12);
+            btnSelectFiles.Name = "btnSelectFiles";
+            btnSelectFiles.Size = new Size(150, 27);
+            btnSelectFiles.TabIndex = 0;
+            btnSelectFiles.Text = "选择 Excel 文件...";
+            btnSelectFiles.UseVisualStyleBackColor = true;
+            btnSelectFiles.Click += btnSelectFiles_Click;
             // 
             // btnSelectOutput
             // 
-            this.btnSelectOutput.Location = new System.Drawing.Point(168, 12);
-            this.btnSelectOutput.Name = "btnSelectOutput";
-            this.btnSelectOutput.Size = new System.Drawing.Size(150, 27);
-            this.btnSelectOutput.TabIndex = 1;
-            this.btnSelectOutput.Text = "选择输出目录...";
-            this.btnSelectOutput.UseVisualStyleBackColor = true;
-            this.btnSelectOutput.Click += new System.EventHandler(this.btnSelectOutput_Click);
+            btnSelectOutput.Location = new Point(168, 12);
+            btnSelectOutput.Name = "btnSelectOutput";
+            btnSelectOutput.Size = new Size(150, 27);
+            btnSelectOutput.TabIndex = 1;
+            btnSelectOutput.Text = "选择输出目录...";
+            btnSelectOutput.UseVisualStyleBackColor = true;
+            btnSelectOutput.Click += btnSelectOutput_Click;
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(324, 12);
-            this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(120, 27);
-            this.btnStart.TabIndex = 2;
-            this.btnStart.Text = "确定拆分";
-            this.btnStart.UseVisualStyleBackColor = true;
-            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
-            // 
-            // lblHeaderRows
-            // 
-            this.lblHeaderRows.AutoSize = true;
-            this.lblHeaderRows.Location = new System.Drawing.Point(460, 17);
-            this.lblHeaderRows.Name = "lblHeaderRows";
-            this.lblHeaderRows.Size = new System.Drawing.Size(140, 15);
-            this.lblHeaderRows.TabIndex = 3;
-            this.lblHeaderRows.Text = "固定前 N 行（头部）：";
-            // 
-            // numHeaderRows
-            // 
-            this.numHeaderRows.Location = new System.Drawing.Point(606, 12);
-            this.numHeaderRows.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numHeaderRows.Name = "numHeaderRows";
-            this.numHeaderRows.Size = new System.Drawing.Size(60, 23);
-            this.numHeaderRows.TabIndex = 4;
-            this.numHeaderRows.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // lblMaxRows
-            // 
-            this.lblMaxRows.AutoSize = true;
-            this.lblMaxRows.Location = new System.Drawing.Point(460, 48);
-            this.lblMaxRows.Name = "lblMaxRows";
-            this.lblMaxRows.Size = new System.Drawing.Size(242, 15);
-            this.lblMaxRows.TabIndex = 5;
-            this.lblMaxRows.Text = "每个拆分文件最大数据行（不含头部）：";
-            // 
-            // numMaxRows
-            // 
-            this.numMaxRows.Location = new System.Drawing.Point(708, 44);
-            this.numMaxRows.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.numMaxRows.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numMaxRows.Name = "numMaxRows";
-            this.numMaxRows.Size = new System.Drawing.Size(80, 23);
-            this.numMaxRows.TabIndex = 6;
-            this.numMaxRows.Value = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
+            btnStart.Location = new Point(324, 12);
+            btnStart.Name = "btnStart";
+            btnStart.Size = new Size(120, 27);
+            btnStart.TabIndex = 2;
+            btnStart.Text = "确定拆分";
+            btnStart.UseVisualStyleBackColor = true;
+            btnStart.Click += btnStart_Click;
             // 
             // lstFiles
             // 
-            this.lstFiles.FormattingEnabled = true;
-            this.lstFiles.ItemHeight = 15;
-            this.lstFiles.Location = new System.Drawing.Point(12, 50);
-            this.lstFiles.Name = "lstFiles";
-            this.lstFiles.Size = new System.Drawing.Size(440, 379);
-            this.lstFiles.TabIndex = 7;
+            lstFiles.ContextMenuStrip = ctxListCopy;
+            lstFiles.FormattingEnabled = true;
+            lstFiles.Location = new Point(12, 152);
+            lstFiles.Name = "lstFiles";
+            lstFiles.SelectionMode = SelectionMode.MultiExtended;
+            lstFiles.Size = new Size(440, 276);
+            lstFiles.TabIndex = 7;
+            lstFiles.KeyDown += lstList_KeyDown;
+            // 
+            // ctxListCopy
+            // 
+            ctxListCopy.Items.AddRange(new ToolStripItem[] { menuCopy, menuCopyAll });
+            ctxListCopy.Name = "ctxListCopy";
+            ctxListCopy.Size = new Size(141, 48);
+            // 
+            // menuCopy
+            // 
+            menuCopy.Name = "menuCopy";
+            menuCopy.Size = new Size(140, 22);
+            menuCopy.Text = "复制所选(&C)";
+            menuCopy.Click += menuCopy_Click;
+            // 
+            // menuCopyAll
+            // 
+            menuCopyAll.Name = "menuCopyAll";
+            menuCopyAll.Size = new Size(140, 22);
+            menuCopyAll.Text = "全部复制(&A)";
+            menuCopyAll.Click += menuCopyAll_Click;
             // 
             // lstLog
             // 
-            this.lstLog.FormattingEnabled = true;
-            this.lstLog.ItemHeight = 15;
-            this.lstLog.Location = new System.Drawing.Point(460, 80);
-            this.lstLog.Name = "lstLog";
-            this.lstLog.Size = new System.Drawing.Size(328, 349);
-            this.lstLog.TabIndex = 8;
+            lstLog.ContextMenuStrip = ctxListCopy;
+            lstLog.FormattingEnabled = true;
+            lstLog.Location = new Point(460, 148);
+            lstLog.Name = "lstLog";
+            lstLog.SelectionMode = SelectionMode.MultiExtended;
+            lstLog.Size = new Size(630, 276);
+            lstLog.TabIndex = 8;
+            lstLog.KeyDown += lstList_KeyDown;
+            // 
+            // numMaxRows
+            // 
+            numMaxRows.Location = new Point(260, 108);
+            numMaxRows.Maximum = new decimal(new int[] { 1000000, 0, 0, 0 });
+            numMaxRows.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numMaxRows.Name = "numMaxRows";
+            numMaxRows.Size = new Size(80, 23);
+            numMaxRows.TabIndex = 8;
+            numMaxRows.Value = new decimal(new int[] { 1998, 0, 0, 0 });
+            // 
+            // numHeaderRows
+            // 
+            numHeaderRows.Location = new Point(158, 80);
+            numHeaderRows.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            numHeaderRows.Name = "numHeaderRows";
+            numHeaderRows.Size = new Size(60, 23);
+            numHeaderRows.TabIndex = 6;
+            numHeaderRows.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            // 
+            // lblMaxRows
+            // 
+            lblMaxRows.AutoSize = true;
+            lblMaxRows.Location = new Point(12, 112);
+            lblMaxRows.Name = "lblMaxRows";
+            lblMaxRows.Size = new Size(224, 17);
+            lblMaxRows.TabIndex = 7;
+            lblMaxRows.Text = "每个拆分文件最大数据行（不含头部）：";
+            // 
+            // lblOutputDirLabel
+            // 
+            lblOutputDirLabel.AutoSize = true;
+            lblOutputDirLabel.Location = new Point(12, 52);
+            lblOutputDirLabel.Name = "lblOutputDirLabel";
+            lblOutputDirLabel.Size = new Size(68, 17);
+            lblOutputDirLabel.TabIndex = 3;
+            lblOutputDirLabel.Text = "输出目录：";
+            // 
+            // txtOutputDir
+            // 
+            txtOutputDir.Location = new Point(90, 48);
+            txtOutputDir.Name = "txtOutputDir";
+            txtOutputDir.ReadOnly = true;
+            txtOutputDir.Size = new Size(698, 23);
+            txtOutputDir.TabIndex = 4;
+            // 
+            // lblGroupCols
+            // 
+            lblGroupCols.AutoSize = true;
+            lblGroupCols.Location = new Point(360, 84);
+            lblGroupCols.Name = "lblGroupCols";
+            lblGroupCols.Size = new Size(140, 17);
+            lblGroupCols.TabIndex = 9;
+            lblGroupCols.Text = "分组列号（逗号分隔）：";
+            // 
+            // txtGroupCols
+            // 
+            txtGroupCols.Location = new Point(520, 80);
+            txtGroupCols.Name = "txtGroupCols";
+            txtGroupCols.Size = new Size(268, 23);
+            txtGroupCols.TabIndex = 10;
+            txtGroupCols.Leave += txtGroupCols_Leave;
+            // 
+            // lblHeaderRowsLabel
+            // 
+            lblHeaderRowsLabel.AutoSize = true;
+            lblHeaderRowsLabel.Location = new Point(12, 84);
+            lblHeaderRowsLabel.Name = "lblHeaderRowsLabel";
+            lblHeaderRowsLabel.Size = new Size(134, 17);
+            lblHeaderRowsLabel.TabIndex = 5;
+            lblHeaderRowsLabel.Text = "固定前 N 行（头部）：";
             // 
             // openFileDialog
             // 
-            this.openFileDialog.Multiselect = true;
-            this.openFileDialog.Filter = "Excel 文件|*.xlsx;*.xlsm;*.xls";
+            openFileDialog.Filter = "Excel 文件|*.xlsx;*.xlsm;*.xls";
+            openFileDialog.Multiselect = true;
+            // 
+            // chkSplitToFiles
+            // 
+            chkSplitToFiles.Location = new Point(469, 16);
+            chkSplitToFiles.Name = "chkSplitToFiles";
+            chkSplitToFiles.Size = new Size(240, 21);
+            chkSplitToFiles.TabIndex = 11;
+            chkSplitToFiles.Text = "拆分成多个文件（每部分为单独文件）";
             // 
             // Form1
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.lstLog);
-            this.Controls.Add(this.lstFiles);
-            this.Controls.Add(this.numMaxRows);
-            this.Controls.Add(this.lblMaxRows);
-            this.Controls.Add(this.numHeaderRows);
-            this.Controls.Add(this.lblHeaderRows);
-            this.Controls.Add(this.btnStart);
-            this.Controls.Add(this.btnSelectOutput);
-            this.Controls.Add(this.btnSelectFiles);
-            this.Name = "Form1";
-            this.Text = "Excel 拆分器";
-            ((System.ComponentModel.ISupportInitialize)(this.numMaxRows)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numHeaderRows)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(7F, 17F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1102, 520);
+            Controls.Add(btnSelectFiles);
+            Controls.Add(btnSelectOutput);
+            Controls.Add(btnStart);
+            Controls.Add(lblOutputDirLabel);
+            Controls.Add(txtOutputDir);
+            Controls.Add(lblGroupCols);
+            Controls.Add(txtGroupCols);
+            Controls.Add(chkSplitToFiles);
+            Controls.Add(lstFiles);
+            Controls.Add(lblHeaderRowsLabel);
+            Controls.Add(numHeaderRows);
+            Controls.Add(lblMaxRows);
+            Controls.Add(numMaxRows);
+            Controls.Add(lstLog);
+            Name = "Form1";
+            Text = "Excel 拆分器";
+            ctxListCopy.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)numMaxRows).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numHeaderRows).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
