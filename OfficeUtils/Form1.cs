@@ -85,6 +85,7 @@ namespace OfficeUtils
                         txtOutputDir.Text = outputDirectory;
                 }
                 Log($"已选择 {openFileDialog.FileNames.Length} 个文件，默认输出目录：{outputDirectory}");
+                AppLogger.Logger?.Information("Selected {Count} files, output dir {Dir}", openFileDialog.FileNames.Length, outputDirectory);
             }
         }
 
@@ -96,6 +97,7 @@ namespace OfficeUtils
                 if (txtOutputDir != null)
                     txtOutputDir.Text = outputDirectory;
                 Log($"输出目录：{outputDirectory}");
+                AppLogger.Logger?.Information("Output directory set to {Dir}", outputDirectory);
             }
         }
 
@@ -150,10 +152,11 @@ namespace OfficeUtils
 
                         if (skipFile) continue;
 
-                        try
+                try
                         {
                             SplitFile(file, maxRowsPerFile, headerRows, outputDirectory);
                             Invoke(new Action(() => Log($"拆分完成：{Path.GetFileName(file)}")));
+                    AppLogger.Logger?.Information("Split completed for {File}", file);
                         }
                         catch (Exception ex)
                         {
@@ -448,7 +451,7 @@ namespace OfficeUtils
                     if (current.Count > 0)
                         chunks.Add(new List<int>(current));
 
-                // 为每个 chunk 生成 sheet 或文件
+                    // 为每个 chunk 生成 sheet 或文件
                     foreach (var chunk in chunks)
                     {
                         if (splitToFiles)
@@ -589,8 +592,17 @@ namespace OfficeUtils
                 Invoke(new Action(() => Log(message)));
                 return;
             }
-            lstLog.Items.Add($"{DateTime.Now:HH:mm:ss} {message}");
+            var line = $"{DateTime.Now:HH:mm:ss} {message}";
+            lstLog.Items.Add(line);
             lstLog.TopIndex = lstLog.Items.Count - 1;
+            try
+            {
+                AppLogger.Logger?.Information(line);
+            }
+            catch
+            {
+                // ignore logging errors
+            }
         }
 
         private void menuCopy_Click(object? sender, EventArgs e)
@@ -666,6 +678,11 @@ namespace OfficeUtils
             var msg = ex.Message ?? string.Empty;
             if (msg.IndexOf("being used by another process", StringComparison.OrdinalIgnoreCase) >= 0) return true;
             return false;
+        }
+
+        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

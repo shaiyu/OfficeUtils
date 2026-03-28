@@ -45,6 +45,8 @@
         private System.Windows.Forms.ToolStripMenuItem menuCopyAll;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.SplitContainer MainSplitContainer;
+        private System.Windows.Forms.SplitContainer BottomSplitContainer;
 
         private void InitializeComponent()
         {
@@ -68,9 +70,19 @@
             folderBrowserDialog = new FolderBrowserDialog();
             openFileDialog = new OpenFileDialog();
             chkSplitToFiles = new CheckBox();
+            BottomSplitContainer = new SplitContainer();
+            MainSplitContainer = new SplitContainer();
             ctxListCopy.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numMaxRows).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numHeaderRows).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)BottomSplitContainer).BeginInit();
+            BottomSplitContainer.Panel1.SuspendLayout();
+            BottomSplitContainer.Panel2.SuspendLayout();
+            BottomSplitContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)MainSplitContainer).BeginInit();
+            MainSplitContainer.Panel1.SuspendLayout();
+            MainSplitContainer.Panel2.SuspendLayout();
+            MainSplitContainer.SuspendLayout();
             SuspendLayout();
             // 
             // btnSelectFiles
@@ -106,11 +118,12 @@
             // lstFiles
             // 
             lstFiles.ContextMenuStrip = ctxListCopy;
+            lstFiles.Dock = DockStyle.Fill;
             lstFiles.FormattingEnabled = true;
-            lstFiles.Location = new Point(12, 152);
+            lstFiles.Location = new Point(0, 0);
             lstFiles.Name = "lstFiles";
             lstFiles.SelectionMode = SelectionMode.MultiExtended;
-            lstFiles.Size = new Size(440, 276);
+            lstFiles.Size = new Size(364, 371);
             lstFiles.TabIndex = 7;
             lstFiles.KeyDown += lstList_KeyDown;
             // 
@@ -137,11 +150,12 @@
             // lstLog
             // 
             lstLog.ContextMenuStrip = ctxListCopy;
+            lstLog.Dock = DockStyle.Fill;
             lstLog.FormattingEnabled = true;
-            lstLog.Location = new Point(460, 148);
+            lstLog.Location = new Point(0, 0);
             lstLog.Name = "lstLog";
             lstLog.SelectionMode = SelectionMode.MultiExtended;
-            lstLog.Size = new Size(630, 276);
+            lstLog.Size = new Size(733, 371);
             lstLog.TabIndex = 8;
             lstLog.KeyDown += lstList_KeyDown;
             // 
@@ -224,40 +238,91 @@
             // 
             // chkSplitToFiles
             // 
+            chkSplitToFiles.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            chkSplitToFiles.FlatStyle = FlatStyle.Flat;
+            chkSplitToFiles.Font = new Font("Segoe UI", 9F);
+            chkSplitToFiles.ForeColor = Color.DimGray;
             chkSplitToFiles.Location = new Point(469, 16);
             chkSplitToFiles.Name = "chkSplitToFiles";
             chkSplitToFiles.Size = new Size(240, 21);
             chkSplitToFiles.TabIndex = 11;
             chkSplitToFiles.Text = "拆分成多个文件（每部分为单独文件）";
             // 
+            // BottomSplitContainer
+            // 
+            BottomSplitContainer.Dock = DockStyle.Fill;
+            BottomSplitContainer.Location = new Point(0, 0);
+            BottomSplitContainer.Name = "BottomSplitContainer";
+            // 
+            // BottomSplitContainer.Panel1
+            // 
+            BottomSplitContainer.Panel1.Controls.Add(lstFiles);
+            // 
+            // BottomSplitContainer.Panel2
+            // 
+            BottomSplitContainer.Panel2.Controls.Add(lstLog);
+            BottomSplitContainer.Panel2.Paint += splitContainer1_Panel2_Paint;
+            BottomSplitContainer.Size = new Size(1102, 371);
+            BottomSplitContainer.SplitterDistance = 364;
+            BottomSplitContainer.SplitterWidth = 5;
+            BottomSplitContainer.TabIndex = 12;
+            BottomSplitContainer.TabStop = false;
+            // 
+            // MainSplitContainer
+            // 
+            MainSplitContainer.Dock = DockStyle.Fill;
+            MainSplitContainer.FixedPanel = FixedPanel.Panel1;
+            MainSplitContainer.Location = new Point(0, 0);
+            MainSplitContainer.Name = "MainSplitContainer";
+            MainSplitContainer.Orientation = Orientation.Horizontal;
+            // 
+            // MainSplitContainer.Panel1
+            // 
+            MainSplitContainer.Panel1.Controls.Add(btnSelectFiles);
+            MainSplitContainer.Panel1.Controls.Add(btnSelectOutput);
+            MainSplitContainer.Panel1.Controls.Add(btnStart);
+            MainSplitContainer.Panel1.Controls.Add(lblOutputDirLabel);
+            MainSplitContainer.Panel1.Controls.Add(txtOutputDir);
+            MainSplitContainer.Panel1.Controls.Add(lblGroupCols);
+            MainSplitContainer.Panel1.Controls.Add(txtGroupCols);
+            MainSplitContainer.Panel1.Controls.Add(chkSplitToFiles);
+            MainSplitContainer.Panel1.Controls.Add(lblHeaderRowsLabel);
+            MainSplitContainer.Panel1.Controls.Add(numHeaderRows);
+            MainSplitContainer.Panel1.Controls.Add(lblMaxRows);
+            MainSplitContainer.Panel1.Controls.Add(numMaxRows);
+            // 
+            // MainSplitContainer.Panel2
+            // 
+            MainSplitContainer.Panel2.Controls.Add(BottomSplitContainer);
+            MainSplitContainer.Size = new Size(1102, 520);
+            MainSplitContainer.SplitterDistance = 145;
+            MainSplitContainer.TabIndex = 13;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1102, 520);
-            Controls.Add(btnSelectFiles);
-            Controls.Add(btnSelectOutput);
-            Controls.Add(btnStart);
-            Controls.Add(lblOutputDirLabel);
-            Controls.Add(txtOutputDir);
-            Controls.Add(lblGroupCols);
-            Controls.Add(txtGroupCols);
-            Controls.Add(chkSplitToFiles);
-            Controls.Add(lstFiles);
-            Controls.Add(lblHeaderRowsLabel);
-            Controls.Add(numHeaderRows);
-            Controls.Add(lblMaxRows);
-            Controls.Add(numMaxRows);
-            Controls.Add(lstLog);
+            Controls.Add(MainSplitContainer);
             Name = "Form1";
             Text = "Excel 拆分器";
             ctxListCopy.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)numMaxRows).EndInit();
             ((System.ComponentModel.ISupportInitialize)numHeaderRows).EndInit();
+            BottomSplitContainer.Panel1.ResumeLayout(false);
+            BottomSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)BottomSplitContainer).EndInit();
+            BottomSplitContainer.ResumeLayout(false);
+            MainSplitContainer.Panel1.ResumeLayout(false);
+            MainSplitContainer.Panel1.PerformLayout();
+            MainSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)MainSplitContainer).EndInit();
+            MainSplitContainer.ResumeLayout(false);
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
+
+
     }
 }
