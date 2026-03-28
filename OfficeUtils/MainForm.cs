@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace OfficeUtils
@@ -16,31 +17,50 @@ namespace OfficeUtils
 
         private void InitializeComponent()
         {
-            this.tabControl = new TabControl();
-            this.tabExcelSplit = new TabPage();
-            this.tabBatchUpload = new TabPage();
-
+            tabControl = new TabControl();
+            tabExcelSplit = new TabPage();
+            tabBatchUpload = new TabPage();
+            tabControl.SuspendLayout();
             SuspendLayout();
-
+            // 
             // tabControl
-            this.tabControl.Dock = DockStyle.Fill;
-            this.tabControl.Controls.Add(this.tabExcelSplit);
-            this.tabControl.Controls.Add(this.tabBatchUpload);
-
+            // 
+            tabControl.Controls.Add(tabExcelSplit);
+            tabControl.Controls.Add(tabBatchUpload);
+            tabControl.Dock = DockStyle.Fill;
+            tabControl.Location = new Point(0, 0);
+            tabControl.Name = "tabControl";
+            tabControl.SelectedIndex = 0;
+            tabControl.Size = new Size(900, 600);
+            tabControl.TabIndex = 0;
+            // 
             // tabExcelSplit
-            this.tabExcelSplit.Text = "Excel 拆分";
-            this.tabExcelSplit.Padding = new Padding(6);
-
+            // 
+            tabExcelSplit.Location = new Point(4, 26);
+            tabExcelSplit.Name = "tabExcelSplit";
+            tabExcelSplit.Padding = new Padding(6);
+            tabExcelSplit.Size = new Size(892, 570);
+            tabExcelSplit.TabIndex = 0;
+            tabExcelSplit.Text = "Excel 拆分";
+            // 
             // tabBatchUpload
-            this.tabBatchUpload.Text = "批量上传";
-            this.tabBatchUpload.Padding = new Padding(6);
-
+            // 
+            tabBatchUpload.Location = new Point(4, 26);
+            tabBatchUpload.Name = "tabBatchUpload";
+            tabBatchUpload.Padding = new Padding(6);
+            tabBatchUpload.Size = new Size(192, 70);
+            tabBatchUpload.TabIndex = 1;
+            tabBatchUpload.Text = "批量上传";
+            // 
             // MainForm
-            this.ClientSize = new System.Drawing.Size(900, 600);
-            this.Controls.Add(this.tabControl);
-            this.Text = "OfficeUtils";
-            this.Load += MainForm_Load;
-
+            // 
+            ClientSize = new Size(900, 600);
+            Controls.Add(tabControl);
+            MinimumSize = new Size(800, 600);
+            Name = "MainForm";
+            Text = "OfficeUtils";
+            Load += MainForm_Load;
+            tabControl.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -55,6 +75,18 @@ namespace OfficeUtils
                 form1.Dock = DockStyle.Fill;
                 this.tabExcelSplit.Controls.Add(form1);
                 form1.Show();
+                try
+                {
+                    var ctrl = form1.Controls.Find("lstLog", true).FirstOrDefault();
+                    if (ctrl is RichTextBox rtb)
+                    {
+                        AppLogger.AttachRichTextBox(rtb);
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
             }
             catch (Exception ex)
             {

@@ -30,7 +30,7 @@
         private System.Windows.Forms.Button btnSelectOutput;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.ListBox lstFiles;
-        private System.Windows.Forms.ListBox lstLog;
+        private System.Windows.Forms.RichTextBox lstLog;
         private System.Windows.Forms.NumericUpDown numMaxRows;
         private System.Windows.Forms.NumericUpDown numHeaderRows;
         private System.Windows.Forms.Label lblMaxRows;
@@ -58,7 +58,7 @@
             ctxListCopy = new ContextMenuStrip(components);
             menuCopy = new ToolStripMenuItem();
             menuCopyAll = new ToolStripMenuItem();
-            lstLog = new ListBox();
+            lstLog = new RichTextBox();
             numMaxRows = new NumericUpDown();
             numHeaderRows = new NumericUpDown();
             lblMaxRows = new Label();
@@ -123,7 +123,7 @@
             lstFiles.Location = new Point(0, 0);
             lstFiles.Name = "lstFiles";
             lstFiles.SelectionMode = SelectionMode.MultiExtended;
-            lstFiles.Size = new Size(364, 371);
+            lstFiles.Size = new Size(364, 451);
             lstFiles.TabIndex = 7;
             lstFiles.KeyDown += lstList_KeyDown;
             // 
@@ -149,14 +149,16 @@
             // 
             // lstLog
             // 
+            lstLog.BackColor = Color.White;
             lstLog.ContextMenuStrip = ctxListCopy;
             lstLog.Dock = DockStyle.Fill;
-            lstLog.FormattingEnabled = true;
+            lstLog.Font = new Font("Segoe UI", 9F);
             lstLog.Location = new Point(0, 0);
             lstLog.Name = "lstLog";
-            lstLog.SelectionMode = SelectionMode.MultiExtended;
-            lstLog.Size = new Size(733, 371);
+            lstLog.ReadOnly = true;
+            lstLog.Size = new Size(733, 451);
             lstLog.TabIndex = 8;
+            lstLog.Text = "";
             lstLog.KeyDown += lstList_KeyDown;
             // 
             // numMaxRows
@@ -238,15 +240,14 @@
             // 
             // chkSplitToFiles
             // 
-            chkSplitToFiles.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             chkSplitToFiles.FlatStyle = FlatStyle.Flat;
-            chkSplitToFiles.Font = new Font("Segoe UI", 9F);
             chkSplitToFiles.ForeColor = Color.DimGray;
             chkSplitToFiles.Location = new Point(469, 16);
             chkSplitToFiles.Name = "chkSplitToFiles";
             chkSplitToFiles.Size = new Size(240, 21);
             chkSplitToFiles.TabIndex = 11;
             chkSplitToFiles.Text = "拆分成多个文件（每部分为单独文件）";
+            chkSplitToFiles.CheckedChanged += chkSplitToFiles_CheckedChanged;
             // 
             // BottomSplitContainer
             // 
@@ -262,7 +263,7 @@
             // 
             BottomSplitContainer.Panel2.Controls.Add(lstLog);
             BottomSplitContainer.Panel2.Paint += splitContainer1_Panel2_Paint;
-            BottomSplitContainer.Size = new Size(1102, 371);
+            BottomSplitContainer.Size = new Size(1102, 451);
             BottomSplitContainer.SplitterDistance = 364;
             BottomSplitContainer.SplitterWidth = 5;
             BottomSplitContainer.TabIndex = 12;
@@ -273,6 +274,7 @@
             MainSplitContainer.Dock = DockStyle.Fill;
             MainSplitContainer.FixedPanel = FixedPanel.Panel1;
             MainSplitContainer.Location = new Point(0, 0);
+            MainSplitContainer.MinimumSize = new Size(800, 600);
             MainSplitContainer.Name = "MainSplitContainer";
             MainSplitContainer.Orientation = Orientation.Horizontal;
             // 
@@ -294,7 +296,7 @@
             // MainSplitContainer.Panel2
             // 
             MainSplitContainer.Panel2.Controls.Add(BottomSplitContainer);
-            MainSplitContainer.Size = new Size(1102, 520);
+            MainSplitContainer.Size = new Size(1102, 600);
             MainSplitContainer.SplitterDistance = 145;
             MainSplitContainer.TabIndex = 13;
             // 

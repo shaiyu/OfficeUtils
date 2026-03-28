@@ -1,9 +1,10 @@
+using ClosedXML.Excel;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ClosedXML.Excel;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace OfficeUtils
 {
@@ -144,7 +145,7 @@ namespace OfficeUtils
                                     Text, MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning)));
                                 if (dr == DialogResult.Retry)
                                     continue;
-                                Invoke(new Action(() => Log($"跳过文件（无法访问）：{Path.GetFileName(file)}")));
+                                Invoke(new Action(() => Log($"跳过文件（无法访问）：{Path.GetFileName(file)}", error: true)));
                                 skipFile = true;
                                 break;
                             }
@@ -152,11 +153,11 @@ namespace OfficeUtils
 
                         if (skipFile) continue;
 
-                try
+                        try
                         {
                             SplitFile(file, maxRowsPerFile, headerRows, outputDirectory);
                             Invoke(new Action(() => Log($"拆分完成：{Path.GetFileName(file)}")));
-                    AppLogger.Logger?.Information("Split completed for {File}", file);
+                            AppLogger.Logger?.Information("Split completed for {File}", file);
                         }
                         catch (Exception ex)
                         {
@@ -182,7 +183,7 @@ namespace OfficeUtils
                                 }
                                 else
                                 {
-                                    Invoke(new Action(() => Log($"跳过文件（被占用/无权限）：{Path.GetFileName(file)} -> {ex.Message}")));
+                                    Invoke(new Action(() => Log($"跳过文件（被占用/无权限）：{Path.GetFileName(file)} -> {ex.Message}", error: true)));
                                 }
                             }
                             else
@@ -223,12 +224,12 @@ namespace OfficeUtils
                         Text, MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning)));
                     if (dr == DialogResult.Retry)
                         continue;
-                    Invoke(new Action(() => Log($"跳过文件（无法打开）：{Path.GetFileName(inputPath)}")));
+                    Invoke(new Action(() => Log($"跳过文件（无法打开）：{Path.GetFileName(inputPath)}", error: true)));
                     return;
                 }
                 catch (Exception ex)
                 {
-                    Invoke(new Action(() => Log($"错误：{Path.GetFileName(inputPath)} -> {ex.Message}")));
+                    Invoke(new Action(() => Log($"错误：{Path.GetFileName(inputPath)} -> {ex.Message}", error: true)));
                     return;
                 }
             }
@@ -255,7 +256,7 @@ namespace OfficeUtils
                     if (TrySaveWorkbook(wb, destName))
                         Invoke(new Action(() => Log($"无需拆分或数据量不足，已复制为：{Path.GetFileName(destName)}")));
                     else
-                        Invoke(new Action(() => Log($"保存失败：{Path.GetFileName(destName)}（可能被占用或无权限）")));
+                        Invoke(new Action(() => Log($"保存失败：{Path.GetFileName(destName)}（可能被占用或无权限）", error: true)));
                     return;
                 }
 
@@ -335,7 +336,7 @@ namespace OfficeUtils
                             if (TrySaveWorkbook(newWb, destFile))
                                 Invoke(new Action(() => Log($"已生成文件：{Path.GetFileName(destFile)} (行 {chunkStart}-{chunkEnd}，含头部 {headerRows} 行)")));
                             else
-                                Invoke(new Action(() => Log($"保存失败：{Path.GetFileName(destFile)}（可能被占用或无权限）")));
+                                Invoke(new Action(() => Log($"保存失败：{Path.GetFileName(destFile)}（可能被占用或无权限）", error: true)));
 
                             partIndex++;
                         }
@@ -496,7 +497,7 @@ namespace OfficeUtils
                             if (TrySaveWorkbook(newWb, destFile))
                                 Invoke(new Action(() => Log($"已生成文件：{Path.GetFileName(destFile)} (行 {chunkStart}-{chunkEnd}，含头部 {headerRows} 行，组数 {chunk.Count})")));
                             else
-                                Invoke(new Action(() => Log($"保存失败：{Path.GetFileName(destFile)}（可能被占用或无权限）")));
+                                Invoke(new Action(() => Log($"保存失败：{Path.GetFileName(destFile)}（可能被占用或无权限）", error: true)));
 
                             partIndex++;
                         }
@@ -585,7 +586,7 @@ namespace OfficeUtils
             }
         }
 
-        private void Log(string message)
+        private void Log(string message, bool warning = false, bool error = false)
         {
             if (InvokeRequired)
             {
@@ -593,11 +594,25 @@ namespace OfficeUtils
                 return;
             }
             var line = $"{DateTime.Now:HH:mm:ss} {message}";
-            lstLog.Items.Add(line);
-            lstLog.TopIndex = lstLog.Items.Count - 1;
+            // append to RichTextBox
+            lstLog.AppendText(line + Environment.NewLine);
+            lstLog.SelectionStart = lstLog.Text.Length;
+            lstLog.ScrollToCaret();
             try
             {
-                AppLogger.Logger?.Information(line);
+                if (error)
+                {
+                    AppLogger.Logger?.Error(line);
+                }
+                else if (warning)
+                {
+                    AppLogger.Logger?.Warning(line);
+                }
+                else
+                {
+                    AppLogger.Logger?.Information(line);
+
+                }
             }
             catch
             {
@@ -651,10 +666,11 @@ namespace OfficeUtils
             }
             // Fallback: if one of our listboxes has focus, use it
             if (lstFiles.Focused) return lstFiles;
-            if (lstLog.Focused) return lstLog;
+            // lstLog is now RichTextBox; if focused, prefer lstFiles fallback
+            if (lstLog.Focused) return lstFiles;
             // Last resort: return lstFiles if it has items
             if (lstFiles.Items.Count > 0) return lstFiles;
-            if (lstLog.Items.Count > 0) return lstLog;
+            // RichTextBox doesn't have Items; skip
             return null;
         }
 
@@ -681,6 +697,11 @@ namespace OfficeUtils
         }
 
         private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void chkSplitToFiles_CheckedChanged(object sender, EventArgs e)
         {
 
         }

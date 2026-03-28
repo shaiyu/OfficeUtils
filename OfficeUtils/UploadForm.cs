@@ -20,6 +20,28 @@ namespace OfficeUtils
             InitializeComponent();
         }
 
+        private void Log(string message, bool warning = false, bool error = false)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => Log(message, warning, error)));
+                return;
+            }
+            var line = $"{DateTime.Now:HH:mm:ss} {message}";
+            lstResults.Items.Add(line);
+            lstResults.TopIndex = lstResults.Items.Count - 1;
+            try
+            {
+                if (error)
+                    AppLogger.Logger?.Error(line);
+                else if (warning)
+                    AppLogger.Logger?.Warning(line);
+                else
+                    AppLogger.Logger?.Information(line);
+            }
+            catch { }
+        }
+
         private void BtnSelectFiles_Click(object? sender, EventArgs e)
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -27,7 +49,7 @@ namespace OfficeUtils
                 lstFiles.Items.Clear();
                 foreach (var f in openFileDialog.FileNames)
                     lstFiles.Items.Add(f);
-                lstResults.Items.Add($"已选择 {openFileDialog.FileNames.Length} 个文件");
+                Log($"已选择 {openFileDialog.FileNames.Length} 个文件");
             }
         }
 
@@ -47,7 +69,7 @@ namespace OfficeUtils
 
             btnStartUpload.Enabled = false;
             btnSelectFiles.Enabled = false;
-            lstResults.Items.Add($"开始上传 {lstFiles.Items.Count} 个文件...");
+            Log($"开始上传 {lstFiles.Items.Count} 个文件...");
 
             using var client = new HttpClient();
             var cookieValue = txtCookie?.Text?.Trim();
@@ -59,7 +81,7 @@ namespace OfficeUtils
                 var filePath = item;
                 try
                 {
-                    lstResults.Items.Add($"上传中: {Path.GetFileName(filePath)}");
+                    Log($"上传中: {Path.GetFileName(filePath)}");
                     using var content = new MultipartFormDataContent();
                     using var fs = File.OpenRead(filePath);
                     var streamContent = new StreamContent(fs);
@@ -76,21 +98,20 @@ namespace OfficeUtils
 
                     var resp = await client.PostAsync(url, content);
                     var respText = await resp.Content.ReadAsStringAsync();
-                    lstResults.Items.Add($"{DateTime.Now:HH:mm:ss} {Path.GetFileName(filePath)} -> {resp.StatusCode} {respText}");
                     var logLine = $"{DateTime.Now:HH:mm:ss} {Path.GetFileName(filePath)} -> {resp.StatusCode} {respText}";
-                    lstResults.TopIndex = lstResults.Items.Count - 1;
-                    AppLogger.Logger?.Information(logLine);
+                    if (resp.IsSuccessStatusCode)
+                        Log(logLine);
+                    else
+                        Log(logLine, warning: true);
                 }
                 catch (Exception ex)
                 {
                     var errLine = $"{DateTime.Now:HH:mm:ss} {Path.GetFileName(filePath)} -> 错误: {ex.Message}";
-                    lstResults.Items.Add(errLine);
-                    lstResults.TopIndex = lstResults.Items.Count - 1;
-                    AppLogger.Logger?.Error(ex, errLine);
+                    Log(errLine, error: true);
+                    AppLogger.Logger?.Error(ex, "Upload error for {File}", filePath);
                 }
             }
-
-            lstResults.Items.Add("上传完成。");
+            Log("上传完成。");
             AppLogger.Logger?.Information("Batch upload completed");
             btnStartUpload.Enabled = true;
             btnSelectFiles.Enabled = true;
