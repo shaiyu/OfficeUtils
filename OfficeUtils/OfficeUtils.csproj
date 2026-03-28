@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.105.0" />
-    <PackageReference Include="SunnyUI" Version="3.9.3" />
   </ItemGroup>
 
 </Project>
