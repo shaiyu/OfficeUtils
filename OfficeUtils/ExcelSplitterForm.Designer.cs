@@ -1,6 +1,6 @@
 ﻿namespace OfficeUtils
 {
-    partial class Form1
+    partial class ExcelSplitterForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -306,7 +306,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1102, 520);
             Controls.Add(MainSplitContainer);
-            Name = "Form1";
+            Name = "ExcelSplitterForm";
             Text = "Excel 拆分器";
             ctxListCopy.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)numMaxRows).EndInit();

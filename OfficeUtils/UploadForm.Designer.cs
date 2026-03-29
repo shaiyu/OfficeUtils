@@ -135,7 +135,7 @@ namespace OfficeUtils
             // 
             BottomSplitContainer.Panel2.Controls.Add(lstResults);
             BottomSplitContainer.Size = new Size(1005, 414);
-            BottomSplitContainer.SplitterDistance = 395;
+            BottomSplitContainer.SplitterDistance = 364;
             BottomSplitContainer.SplitterWidth = 5;
             BottomSplitContainer.TabIndex = 0;
             // 

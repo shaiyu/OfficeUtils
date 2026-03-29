@@ -27,6 +27,16 @@ namespace OfficeUtils
             // 
             tabControl.Controls.Add(tabExcelSplit);
             tabControl.Controls.Add(tabBatchUpload);
+            // add two extra tabs
+            var tabSimpleSplit = new TabPage();
+            tabSimpleSplit.Text = "简单拆分";
+            tabSimpleSplit.Padding = new Padding(6);
+            tabControl.Controls.Add(tabSimpleSplit);
+
+            var tabSimpleMerge = new TabPage();
+            tabSimpleMerge.Text = "简单合并";
+            tabSimpleMerge.Padding = new Padding(6);
+            tabControl.Controls.Add(tabSimpleMerge);
             tabControl.Dock = DockStyle.Fill;
             tabControl.Location = new Point(0, 0);
             tabControl.Name = "tabControl";
@@ -69,7 +79,7 @@ namespace OfficeUtils
             // Host existing Form1 in the first tab
             try
             {
-                var form1 = new Form1();
+                var form1 = new ExcelSplitterForm();
                 form1.TopLevel = false;
                 form1.FormBorderStyle = FormBorderStyle.None;
                 form1.Dock = DockStyle.Fill;
@@ -102,6 +112,36 @@ namespace OfficeUtils
                 upload.Dock = DockStyle.Fill;
                 this.tabBatchUpload.Controls.Add(upload);
                 upload.Show();
+            }
+            catch
+            {
+                // ignore
+            }
+
+            // Host SimpleSplitForm in third tab
+            try
+            {
+                var simpleSplit = new SimpleSplitForm();
+                simpleSplit.TopLevel = false;
+                simpleSplit.FormBorderStyle = FormBorderStyle.None;
+                simpleSplit.Dock = DockStyle.Fill;
+                this.tabControl.Controls[2].Controls.Add(simpleSplit);
+                simpleSplit.Show();
+            }
+            catch
+            {
+                // ignore
+            }
+
+            // Host SimpleMergeForm in fourth tab
+            try
+            {
+                var simpleMerge = new SimpleMergeForm();
+                simpleMerge.TopLevel = false;
+                simpleMerge.FormBorderStyle = FormBorderStyle.None;
+                simpleMerge.Dock = DockStyle.Fill;
+                this.tabControl.Controls[3].Controls.Add(simpleMerge);
+                simpleMerge.Show();
             }
             catch
             {

@@ -8,11 +8,11 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace OfficeUtils
 {
-    public partial class Form1 : Form
+    public partial class ExcelSplitterForm : Form
     {
         private string outputDirectory;
 
-        public Form1()
+        public ExcelSplitterForm()
         {
             InitializeComponent();
         }
